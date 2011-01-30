@@ -33,12 +33,11 @@ public class NLBroidView extends Activity {
         final EditText searchContents = (EditText)findViewById(R.id.search_contents);
         final Button searchButton = (Button)findViewById(R.id.search_button);
         
-        
     }
     
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R, menu);
+        inflater.inflate(R.menu.menu, menu);
         return true;
     }
 }
