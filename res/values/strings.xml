@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, NLBroidView!</string>
-    <string name="app_name">NLBroid</string>
+	<string name="app_name">NLBroid</string>
+    <string name="search_contents">Enter author, title, isbn</string>
+    <string name="search_button">Search</string>
+    <string name="about_us">About</string>
 </resources>

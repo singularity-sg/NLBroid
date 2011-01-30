@@ -1,0 +1,18 @@
+*******************************************************
+*  NLBroid README. Copyright 2011 Singularity.Sg      *
+*******************************************************
+ 
+
+
+
+LEGALESE
+--------
+NLBroid is meant to be used in conjunction with the webservices provided by
+the National Library Board in order to perform query for books in the NLB's
+Catalogue. NLBroid does not contain any source of data and should not be held
+legally responsible for any illegal content that is retrieved from the webservice.
+It is licensed under GNU Public license and is meant to be redistributed and
+shared. Please see http://www.gnu.org/licenses/ for more information.
+
+
+
