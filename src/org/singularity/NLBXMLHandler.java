@@ -16,11 +16,16 @@ If not, see http://www.gnu.org/licenses/.
 
 package org.singularity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class NLBXMLHandler extends DefaultHandler {
+	
+	Map<String, Object> results = new HashMap<String, Object>();
 
 	@Override
 	public void endElement(String uri, String localName, String qName)

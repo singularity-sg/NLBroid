@@ -20,7 +20,21 @@ package org.singularity;
 import java.util.Map;
 
 public interface IWebServicesUtil {
-
-	public Map<String, Object> query(String set);
+	
+	/**
+	 * 
+	 * @param option - The selected library dataset
+	 * @param filter - The parameters for adding search criteria
+	 * @param keyword - The keyword related to the search criteria
+	 * @return Map<String, Object>
+	 */
+	public Map<String, Object> query(String option, String filter, String keyword);
+	
+	/**
+	 * 
+	 * @param option - The selected library dataset
+	 * @return
+	 */
+	public Map<String, Object> query(String option);
 	
 }

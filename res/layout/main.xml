@@ -3,13 +3,46 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="#FFFFFFFF"
     >
+    
+    <ImageView   
+  		android:layout_width="wrap_content"
+  		android:layout_height="wrap_content"
+  		android:src="@drawable/nlb_logo"
+  		/>
+  		
+  	<TextView 
+  		android:layout_width="wrap_content"
+  		android:layout_height="wrap_content"
+  		android:text="@string/dataset_label"
+  		android:textColor="#FF000000"
+  		android:textStyle="bold"
+  		android:textSize="15sp"
+  		/>
     
     <Spinner 
         android:id="@+id/search_choice"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:prompt="@string/search_choice"
+        
+    />
+    
+    <TextView 
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+  		android:text="@string/filter_label"
+  		android:textColor="#FF000000"
+  		android:textStyle="bold"
+  		android:textSize="15sp"
+  		/>
+    
+    <Spinner 
+        android:id="@+id/search_filter"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/search_filter"
     />
     
     <EditText android:text="@string/search_contents" 
@@ -17,6 +50,7 @@
     	android:id="@+id/search_contents" 
     	android:layout_width="fill_parent">
     </EditText>
+    
     
     <Button android:id="@+id/search_button"
         android:layout_width="fill_parent"

@@ -7,12 +7,19 @@
 
     <application android:icon="@drawable/icon" android:label="@string/app_name">
         
-        <activity android:name=".NLBroidView"
+        <activity android:name=".NLBroidMain"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        
+        <activity android:name=".NLBroidListView"
+        		  android:label="@string/app_results">
+        	<intent-filter>
+        		<action android:name="org.singularity.intent.SHOW_RESULTS" />
+        	</intent-filter>	  
         </activity>
         
     </application>

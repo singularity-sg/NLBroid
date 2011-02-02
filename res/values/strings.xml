@@ -5,11 +5,22 @@
     <string name="search_button">Search</string>
     <string name="about_us">About</string>
     <string name="search_choice">Choose a dataset</string>
+    <string name="search_filter">Choose a filter</string>
+    <string name="filter_label">Filter Criteria</string>
+    <string name="dataset_label">Dataset</string>
+    <string name="app_results">Results</string>
     <string-array name="search_array">
+    	<item>Not Selected</item>
     	<item>Catalog</item>
     	<item>Latest Article</item>
     	<item>New Arrival</item>
     	<item>Library</item>
     	<item>Event</item>
+    </string-array>
+    <string-array name="filter_array">
+    	<item>Not Selected</item>
+    	<item>Author</item>
+    	<item>Title</item>
+    	<item>Description</item>
     </string-array>
 </resources>

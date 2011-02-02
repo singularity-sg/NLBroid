@@ -22,15 +22,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
+import junit.framework.Assert;
 
 import org.singularity.util.NLBUtil;
 import org.xml.sax.InputSource;
@@ -40,18 +39,34 @@ import android.os.Environment;
 import android.util.Log;
 
 public class NLBWebServicesUtil implements IWebServicesUtil {
-
-	private static String NLB_URL = "https://nlb.projectnimbus.org/nlbodataservice.svc/";
 	
-	public Map<String, Object> query(String queryString) {
+	private static final String NOT_SELECTED = "Not Selected";
+	private static String NLB_URL = "https://nlb.projectnimbus.org/nlbodataservice.svc/";
+	private HttpsURLConnection conn = null;
+	
+	
+	public Map<String, Object> query(String option) {
+		return query(option, null, null);
+	}
+	
+	public Map<String, Object> query(String option, String filter) {
+		return query(option, filter, null);
+	}
+	
+	public Map<String, Object> query(String option, String filter, String keyword) {
 		
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		HttpsURLConnection conn = null;
 		URL url = null;
 		
 		try {
 			
-			url = new URL(new StringBuffer(NLB_URL).append(URLEncoder.encode(queryString, "UTF-8")).toString());
+			if(keyword != null && !NOT_SELECTED.equals(keyword) && filter != null && !NOT_SELECTED.equals(filter) ) {
+				String urlEncoded = new StringBuffer("?$filter=indexof(").append(getFilterString(filter)).append(",'").append(keyword).append("')").append("%20ne%20-1").toString();
+				url = new URL(new StringBuffer(NLB_URL).append(getQueryString(option)).append(urlEncoded).toString());
+			} else {
+				url = new URL(new StringBuffer(NLB_URL).append(getQueryString(option)).toString());
+			}
+			
+			Log.i("NLBRoidView", new StringBuffer("URL: ").append(url.toString()).toString());
 			
 			conn = (HttpsURLConnection) url.openConnection();
 			//conn.setRequestProperty("Accept","text/html,application/xhtml+xml,application/xml");
@@ -59,12 +74,21 @@ public class NLBWebServicesUtil implements IWebServicesUtil {
 			//conn.setRequestProperty("Accept-Language", "en-us,en");
 			//conn.setRequestProperty("Accept-Charset", "ISO-8859-1,UTF-8");
 			conn.setRequestProperty("Connection", "keep-alive");
-			conn.setRequestProperty("Accept", "*/*");
+			conn.setRequestProperty("Accept", "application/atom+xml,application/xml");
 			conn.setRequestProperty("AccountKey", "CbRVBj3dG034Yf4KzxaS6CdjZNT=");
 			conn.setRequestProperty("UniqueUserID", "00000000000000000000000000000001");
 			
-			writeNLBResponseToFile(conn.getInputStream());
+			File root = Environment.getExternalStorageDirectory();
+    		Log.i("NLBRoidView", "SDCard directory : " + root.getAbsolutePath());
+    		File respFile = new File(root, "NLBroid.xml");
+    		Log.i("NLBRoidView", "File location : " + respFile.getAbsolutePath());
 			
+			writeNLBResponseToFile(respFile);
+    		
+			Map<String, Object> results = parseNLBResponse(respFile);
+			
+    		Log.i("NLBRoidView", "Finished parsing XML File");
+    		
 		} catch (FileNotFoundException fnfe) {
 			StringBuffer debug = new StringBuffer();
 			
@@ -73,7 +97,8 @@ public class NLBWebServicesUtil implements IWebServicesUtil {
 				Log.e("NLBroidView", debug.toString(), fnfe);
 			}catch(IOException ioe) {
 				Log.e("NLBroidView", "Unable to generate debug string", fnfe);
-			}	
+			}
+			
 	    } catch (Exception e) {
 	    	Log.e("NLBroidView", "There is a problem connecting to the NLB webservice", e);
 	    } finally {
@@ -86,24 +111,84 @@ public class NLBWebServicesUtil implements IWebServicesUtil {
 		
 	}
 	
+	private String getQueryString(String selection) {
+		
+		Assert.assertTrue(selection != null);
+		
+		String returnVal = null;
+		
+		if("Catalog".equals(selection)) {
+			returnVal = "CatalogSet";
+		} else  
+		if("Latest Article".equals(selection)) {
+			returnVal = "LatestArticleSet";
+		} else 
+		if("New Arrival".equals(selection)) {
+			returnVal = "NewArrivalSet";
+		} else 
+		if("Library".equals(selection)) {
+			returnVal = "LibrarySet";
+		} else 
+		if("Event".equals(selection)) {
+			returnVal = "EventSet";
+		}
+		
+		Assert.assertTrue(returnVal != null);
+		
+		return returnVal;
+		
+	}
 	
-    private void parseNLBResponse(InputStream is) throws Exception {
+	
+	private String getFilterString(String filter) {
+		
+		Assert.assertTrue(filter != null);
+		
+		String returnVal = null;
+		
+		if("Author".equals(filter)) {
+			returnVal = "Author";
+		} else
+		if("Title".equals(filter)) {
+			returnVal = "TitleName";
+		} else 
+		if("Description".equals(filter)) {
+			returnVal = "MediaDesc";
+		}
+		
+		Assert.assertTrue(returnVal != null);
+		
+		return returnVal;
+	}
+	
+	
+    private Map<String, Object> parseNLBResponse(File respFile) throws Exception {
+    	
+    	Assert.assertTrue(respFile != null && respFile.exists());
+    	
+    	BufferedInputStream bis = null;
+    	
+    	Log.i("NLBDroid","Reading from file...");
+		if(respFile != null && respFile.exists() && respFile.isFile()) {
+			bis = new BufferedInputStream(respFile.toURL().openStream(), 8000);
+		}
     	
     	SAXParserFactory spf = SAXParserFactory.newInstance();
     	SAXParser parser = spf.newSAXParser();
     	XMLReader reader = parser.getXMLReader();
-    	reader.setContentHandler(new NLBXMLHandler());
-    	reader.parse(new InputSource(is));
+    	
+    	NLBXMLHandler handler = new NLBXMLHandler();
+    	reader.setContentHandler(handler);
+    	reader.parse(new InputSource(bis));
     
-    	Log.i("NLBroidView", "Parsing NLB Response");
-
+    	
+    	return handler.results;
     }
     
-    private void writeNLBResponseToFile(InputStream is) throws Exception {
-    	
-    	BufferedInputStream bis = new BufferedInputStream(is, 8000);
+    private void writeNLBResponseToFile(File file) throws Exception {
+    
+    	BufferedInputStream bis = new BufferedInputStream(conn.getInputStream(), 8000);
     	FileWriter writer = null;
-    	
     	Log.i("NLBRoidView","Starting write into the file...");
     	
     	if(NLBUtil.isSDCardPresent()) {
@@ -111,24 +196,27 @@ public class NLBWebServicesUtil implements IWebServicesUtil {
     		Log.i("NLBRoidView","SDCard is found!");
     		
     		try {
-	    		File root = Environment.getExternalStorageDirectory();
-	    		Log.i("NLBRoidView", "SDCard directory : " + root.getAbsolutePath());
-	    		File respFile = new File(root, "NLBroid.xml");
-	    		Log.i("NLBRoidView", "File location : " + respFile.getAbsolutePath());
-	    		writer = new FileWriter(respFile);
+    			
+	    		writer = new FileWriter(file);
 	    		
 	    		int read;
 	    		while((read = bis.read()) != -1) {
 	    			writer.write(read);
 	    		}
+	    	
     		} finally {
     			if(writer != null) {
 	    			writer.flush();
 	    			writer.close();
 	    		}
+    			
+    			if(bis != null) {
+    				bis.close();
+    			}
     		}
     		
     		Log.i("NLBDroid","Finished writing to sdcard");
+    		
     	} else {
     		Log.e("NLBDroid","Unable to find SDCard!!!");
     	}
