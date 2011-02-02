@@ -14,28 +14,13 @@ You should have received a copy of the GNU General Public License along with NLB
 If not, see http://www.gnu.org/licenses/.
  **/
 
+
 package org.singularity;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
+import java.util.Map;
 
-public class NLBXMLHandler extends DefaultHandler {
+public interface IWebServicesUtil {
 
-	@Override
-	public void endElement(String uri, String localName, String qName)
-			throws SAXException {
-		// TODO Auto-generated method stub
-		super.endElement(uri, localName, qName);
-	}
-
-	@Override
-	public void startElement(String uri, String localName, String qName,
-			Attributes attributes) throws SAXException {
-		// TODO Auto-generated method stub
-		super.startElement(uri, localName, qName, attributes);
-	}
-
-	
+	public Map<String, Object> query(String set);
 	
 }

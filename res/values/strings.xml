@@ -4,4 +4,12 @@
     <string name="search_contents">Enter author, title, isbn</string>
     <string name="search_button">Search</string>
     <string name="about_us">About</string>
+    <string name="search_choice">Choose a dataset</string>
+    <string-array name="search_array">
+    	<item>Catalog</item>
+    	<item>Latest Article</item>
+    	<item>New Arrival</item>
+    	<item>Library</item>
+    	<item>Event</item>
+    </string-array>
 </resources>

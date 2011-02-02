@@ -5,6 +5,13 @@
     android:layout_height="fill_parent"
     >
     
+    <Spinner 
+        android:id="@+id/search_choice"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/search_choice"
+    />
+    
     <EditText android:text="@string/search_contents" 
     	android:layout_height="wrap_content" 
     	android:id="@+id/search_contents" 
