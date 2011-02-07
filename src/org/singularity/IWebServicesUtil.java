@@ -17,7 +17,9 @@ If not, see http://www.gnu.org/licenses/.
 
 package org.singularity;
 
-import java.util.Map;
+import java.util.List;
+
+import org.singularity.bean.NLBBean;
 
 public interface IWebServicesUtil {
 	
@@ -28,13 +30,13 @@ public interface IWebServicesUtil {
 	 * @param keyword - The keyword related to the search criteria
 	 * @return Map<String, Object>
 	 */
-	public Map<String, Object> query(String option, String filter, String keyword);
+	public List<NLBBean> query(String option, String filter, String keyword);
 	
 	/**
 	 * 
 	 * @param option - The selected library dataset
 	 * @return
 	 */
-	public Map<String, Object> query(String option);
+	public List<NLBBean> query(String option);
 	
 }

@@ -16,10 +16,14 @@ If not, see http://www.gnu.org/licenses/.
 
 package org.singularity;
 
-import java.util.Map;
+import java.util.List;
+
+import org.singularity.bean.NLBBean;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -33,8 +37,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 public class NLBroidMain extends Activity {
-
-	private NLBWebServicesUtil webService = new NLBWebServicesUtil();
 	
     /** Called when the activity is first created. */
     @Override
@@ -76,7 +78,6 @@ public class NLBroidMain extends Activity {
         
         final EditText searchContents = (EditText)findViewById(R.id.search_contents);
         
-        
         final Button searchButton = (Button)findViewById(R.id.search_button);
         searchButton.setOnClickListener(new OnClickListener() {
 
@@ -84,27 +85,38 @@ public class NLBroidMain extends Activity {
 			@Override
 			public void onClick(View v) {
 				
-				String searchCriteria = searchContents.getText().toString();
-				Map<String, Object> results = null;
+				String filterCriteria = searchContents.getText().toString();
 				
 				// Check if the searchCriteria is the same as the initial string
 				// If it is, then prompt with a notification to enter a string
-				if(getString(R.string.search_contents).equals(searchCriteria)) {
+				if(getString(R.string.search_contents).equals(filterCriteria)) {
 					
 					Toast.makeText(getApplicationContext(), "Please enter a search query!", Toast.LENGTH_SHORT).show();
 					
 				} else {
 					
 					String selected = spinner.getSelectedItem().toString();
-					String filter = filterSpinner.getSelectedItem().toString();
 					
+					// If we are searching for a Catalog, then we need to select the filter type and the filter criteria
 					if("Catalog".equals(selected)) {
-						if(filter == null || "".equals(filter)) {
-							Toast.makeText(getApplicationContext(), "Please select a filter type", Toast.LENGTH_SHORT).show();
+						
+						Object selectedObj = filterSpinner.getSelectedItem();
+						String filter = "";
+						if(selectedObj != null) {
+							filter = selectedObj.toString();
 						}
-						results = webService.query(selected, filter, searchCriteria);
+						
+						
+						if("".equals(filter)) {
+							Toast.makeText(getApplicationContext(), "Please select a filter type", Toast.LENGTH_SHORT).show();
+						} else {
+							new NLBroidTask().execute(selected, filter, filterCriteria);
+						}
+						
 					} else {
-						results = webService.query(selected);
+						
+						new NLBroidTask().execute(selected);
+					
 					}
 				}
 				
@@ -117,5 +129,56 @@ public class NLBroidMain extends Activity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return true;
-    }    
+    }
+    
+    /**
+     * Private class for executing long running network jobss
+     * @author han
+     *
+     */
+    private class NLBroidTask extends AsyncTask<String, Integer, List<NLBBean>> {
+    	
+    	private NLBWebServicesUtil webService = new NLBWebServicesUtil();
+
+    	@Override
+    	protected List<NLBBean> doInBackground(String... params) {
+    		
+    		List<NLBBean> results = null;
+    		
+    		if(params.length == 3) {
+    			publishProgress(1);
+    			results = webService.query(params[0], params[1], params[2]);
+    		} else 
+    		if(params.length == 1) {
+    			publishProgress(1);
+    			results = webService.query(params[0]);
+    		} else {
+    			publishProgress(-1);
+    		}
+    		
+    		return results;
+    	}
+
+    	@Override
+    	protected void onPostExecute(List<NLBBean> result) {
+    		if(result != null) {
+    			Log.i("NLBroidMain", "No. of items created : " + result.size());
+    			Toast.makeText(NLBroidMain.this.getApplicationContext(), "Listing results", Toast.LENGTH_SHORT);
+    		}
+    	}
+
+    	@Override
+    	protected void onProgressUpdate(Integer... values) {
+    		
+    		if(values[0] == -1) {
+    			Toast.makeText(NLBroidMain.this.getApplicationContext(), "Unable to carry out task due to inadequate parameters", Toast.LENGTH_SHORT);
+    		} else {
+    			Toast.makeText(NLBroidMain.this.getApplicationContext(), "Please wait...", Toast.LENGTH_SHORT);
+    		}
+    		
+    	}
+    	
+    	
+    	
+    }
 }
