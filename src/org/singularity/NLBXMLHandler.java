@@ -32,7 +32,8 @@ public class NLBXMLHandler extends DefaultHandler {
 	String type = null;
 	
 	NLBBean currentEntry = null;
-	boolean isInsideElement = false;
+	boolean isInsideEntry = false;
+	boolean isInsideContent = false;
 	String textVal = "";
 	int idx = 1;
 
@@ -42,11 +43,9 @@ public class NLBXMLHandler extends DefaultHandler {
 		
 		//if(Log.isLoggable("NLBXMLHandler", Log.DEBUG)) {
 		Log.d("NLBXMLHandler", "-----------------------");
-		//} 
+		//} 		
 		
-		isInsideElement = false;
-		
-		/** We are still at the root **/
+		/** We are still at the root so we can be assured that this item is still at the root. The title is a data type **/
 		if("title".equalsIgnoreCase(localName)) { 
 			if(currentEntry == null) {
 				Log.i("NLBXMLHandler","Query type : " + textVal);
@@ -54,45 +53,111 @@ public class NLBXMLHandler extends DefaultHandler {
 			} 
 		}
 		
-		if("Name".equalsIgnoreCase(localName)) {
-			currentEntry.setName(textVal);
-		}
-		
-		if("Address".equalsIgnoreCase(localName)) {
-			currentEntry.setAddress(textVal);
-		}
-		
-		if("Latitude".equalsIgnoreCase(localName)) {
-			
-			Float latitude = null;
-			
-			try {
-				latitude = Float.parseFloat(textVal);
-			} catch (NumberFormatException nfe) {
-				nfe.printStackTrace();
-			}
-			
-			
-			currentEntry.setLatitude(latitude);
-		} 
-		
-		if("Longitude".equalsIgnoreCase(localName)) {
-			
-			Float longitude = null;
-			
-			try {
-				longitude = Float.parseFloat(textVal);
-			} catch (NumberFormatException nfe) {
-				nfe.printStackTrace();
-			}
-			
-			currentEntry.setLongtitude(longitude);
-			
-		}
-		
 		if("entry".equalsIgnoreCase(localName)) {
 			results.add(currentEntry);
 			this.idx++;
+			isInsideEntry = false;
+		}
+		
+		if("content".equalsIgnoreCase(localName)) {
+			isInsideContent = false;
+		}
+		
+		if(isInsideContent) {
+			if("LibrarySet".equals(this.type)) {
+				
+				if("LibraryID".equalsIgnoreCase(localName)) {
+					currentEntry.setId(textVal);
+				} else
+				if("Name".equalsIgnoreCase(localName)) {
+					currentEntry.setName(textVal);
+				} else
+				if("Address".equalsIgnoreCase(localName)) {
+					currentEntry.setAddress(textVal);
+				} else 
+				if("Latitude".equalsIgnoreCase(localName)) {
+					Float latitude = null;
+					try {
+						latitude = Float.parseFloat(textVal);
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+					}
+					currentEntry.setLatitude(latitude);
+				} else
+				if("Longitude".equalsIgnoreCase(localName)) {
+					Float longitude = null;
+					try {
+						longitude = Float.parseFloat(textVal);
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+					}
+					currentEntry.setLongtitude(longitude);
+				}
+			} else 
+			
+			if("LatestArticleSet".equals(this.type)) {
+				
+				if("LatestArticleID".equalsIgnoreCase(localName)) {
+					currentEntry.setId(textVal);
+				} else
+				if("Title".equalsIgnoreCase(localName)) {
+					currentEntry.setTitle(textVal);
+				} else 
+				if("Description".equalsIgnoreCase(localName)) {
+					currentEntry.setDescription(textVal);
+				} else 
+				if("Author".equalsIgnoreCase(localName)) {
+					currentEntry.setAuthor(textVal);
+				} else 
+				if("Category".equalsIgnoreCase(localName)) {
+					currentEntry.setCategory(textVal);
+				} else 
+				if("PublishDate".equalsIgnoreCase(localName)) {
+					currentEntry.setPublishDate(textVal);
+				} else
+				if("URL".equalsIgnoreCase(localName)) {
+					currentEntry.setUrl(textVal);
+				} 		
+			} else 
+				
+			if("EventSet".equals(this.type)) {
+				if("EventID".equalsIgnoreCase(localName)) {
+					currentEntry.setId(textVal);
+				} else
+				if("URL".equalsIgnoreCase(localName)) {
+					currentEntry.setUrl(textVal);
+				} else
+				if("Subject".equalsIgnoreCase(localName)) {
+					currentEntry.setSubject(textVal);
+				} else
+				if("Room".equalsIgnoreCase(localName)) {
+					currentEntry.setRoom(textVal);
+				} else
+				if("Library".equalsIgnoreCase(localName)) {
+					currentEntry.setLibrary(textVal);
+				} else
+				if("Summary".equalsIgnoreCase(localName)) {
+					currentEntry.setSummary(textVal);
+				} else
+				if("Latitude".equalsIgnoreCase(localName)) {				
+					Float latitude = null;				
+					try {
+						latitude = Float.parseFloat(textVal);
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+					}
+					currentEntry.setLatitude(latitude);
+				} else
+				if("Longitude".equalsIgnoreCase(localName)) {	
+					Float longitude = null;
+					try {
+						longitude = Float.parseFloat(textVal);
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+					}
+					currentEntry.setLongtitude(longitude);
+				}
+			}
 		}
 	}
 
@@ -106,23 +171,24 @@ public class NLBXMLHandler extends DefaultHandler {
 		Log.d("NLBXMLHandler", "Element qName : " + qName);
 	
 		
-		isInsideElement = true;
+		isInsideEntry = true;
 		
 		if("entry".equalsIgnoreCase(localName)) {
-			if(this.type != null) {
-				if("LibrarySet".equals(this.type)) {
-					currentEntry = new NLBBean();
-					currentEntry.setIdx(this.idx);
-					currentEntry.setId(this.idx);
-				}
+			if(this.type != null) {			
+				currentEntry = new NLBBean();
+				currentEntry.setIdx(this.idx);		
 			}
+		}
+		
+		if("content".equalsIgnoreCase(localName)) {
+			isInsideContent = true;
 		}
 	}
 
 	@Override
 	public void characters(char[] ch, int start, int length)
 			throws SAXException {
-		if(isInsideElement) {
+		if(isInsideEntry) {
 			textVal = new String(ch, start, length);
 		}
 	}

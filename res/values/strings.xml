@@ -13,7 +13,7 @@
     	<item>Not Selected</item>
     	<item>Catalog</item>
     	<item>Latest Article</item>
-    	<item>New Arrival</item>
+    	<!-- <item>New Arrival</item> -->
     	<item>Library</item>
     	<item>Event</item>
     </string-array>
