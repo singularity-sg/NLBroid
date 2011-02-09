@@ -24,7 +24,7 @@ public class NLBBean implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 5358328534980060417L;
-	
+
 	private String id;
 	private int idx;
 	private String name;
@@ -45,6 +45,23 @@ public class NLBBean implements Serializable {
 	private String date;
 	private String summary;
 	
+	private Type type;
+	
+	public NLBBean() {
+		name = "N/A";
+		address = "N/A";
+		title = "N/A";
+		description = "N/A";
+		author = "N/A";
+		category = "N/A";
+		publishDate = "N/A";
+		url = "N/A";
+		subject = "N/A";
+		room = "N/A";
+		library = "N/A";
+		date = "N/A";
+		summary = "N/A";
+	}
 	
 	public String getId() {
 		return id;
@@ -148,6 +165,33 @@ public class NLBBean implements Serializable {
 	public void setSummary(String summary) {
 		this.summary = summary;
 	}
+	public Type getType() {
+		return type;
+	}
+	public void setType(Type type) {
+		this.type = type;
+	}
 	
+	public String getListTitle() {
+		switch(this.getType()) {
+			case LIBRARY : 	return this.getName();
+			case EVENT   :	return this.getDescription();
+			case CATALOG :  return this.getTitle();
+			case LATEST_ARTICLE : return this.getTitle();
+			default : return "Unknown item";
+		}
+	}
+	
+	public String getDetails() {
+		switch(this.getType()) {
+			case LIBRARY : 	return this.getAddress();
+			case EVENT   :	return this.getSummary();
+			case CATALOG :  return this.getTitle();
+			case LATEST_ARTICLE : return this.getDescription();
+			default : return "Unknown item";
+		}
+	}
+
+	public enum Type { CATALOG, LATEST_ARTICLE, LIBRARY, EVENT }
 	
 }

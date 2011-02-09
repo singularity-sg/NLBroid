@@ -65,7 +65,6 @@ public class NLBXMLHandler extends DefaultHandler {
 		
 		if(isInsideContent) {
 			if("LibrarySet".equals(this.type)) {
-				
 				if("LibraryID".equalsIgnoreCase(localName)) {
 					currentEntry.setId(textVal);
 				} else
@@ -121,6 +120,9 @@ public class NLBXMLHandler extends DefaultHandler {
 			} else 
 				
 			if("EventSet".equals(this.type)) {
+				if("Description".equalsIgnoreCase(localName)) {
+					currentEntry.setDescription(textVal);
+				} else
 				if("EventID".equalsIgnoreCase(localName)) {
 					currentEntry.setId(textVal);
 				} else
@@ -176,7 +178,20 @@ public class NLBXMLHandler extends DefaultHandler {
 		if("entry".equalsIgnoreCase(localName)) {
 			if(this.type != null) {			
 				currentEntry = new NLBBean();
-				currentEntry.setIdx(this.idx);		
+				currentEntry.setIdx(this.idx);	
+				
+				if("LibrarySet".equals(this.type)) {
+					currentEntry.setType(NLBBean.Type.LIBRARY);
+				} else 
+				if("EventSet".equals(this.type)) {
+					currentEntry.setType(NLBBean.Type.EVENT);
+				} else 
+				if("LatestArticleSet".equals(this.type)) {
+					currentEntry.setType(NLBBean.Type.LATEST_ARTICLE);
+				} else
+				if("CatalogSet".equals(this.type)) {
+					currentEntry.setType(NLBBean.Type.CATALOG);
+				}
 			}
 		}
 		

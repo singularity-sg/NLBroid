@@ -15,12 +15,9 @@
             </intent-filter>
         </activity>
         
-        <activity android:name=".NLBroidListView"
+        <activity android:name=".NLBroidResults"
         		  android:label="@string/app_results">
-        	<intent-filter>
-        		<action android:name="org.singularity.intent.SHOW_RESULTS" />
-        	</intent-filter>	  
-        </activity>
+       	</activity>
         
     </application>
     

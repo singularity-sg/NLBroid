@@ -19,9 +19,11 @@ package org.singularity;
 import java.util.List;
 
 import org.singularity.bean.NLBBean;
+import org.singularity.bean.NLBBeanParcelableArray;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,6 +40,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 public class NLBroidMain extends Activity {
+	
+	public static final String ACTION_SHOW_RESULTS = "org.singularity.intent.ACTION_SHOW_RESULTS";
 	
     /** Called when the activity is first created. */
     @Override
@@ -127,6 +131,8 @@ public class NLBroidMain extends Activity {
         return true;
     }
     
+    
+    
     /**
      * Private class for executing long running network jobss
      * @author han
@@ -156,14 +162,21 @@ public class NLBroidMain extends Activity {
 
     	@Override
     	protected void onPostExecute(List<NLBBean> result) {
-    		if(result != null) {
-    			Log.i("NLBroidMain", "No. of items created : " + result.size());
-    			Toast.makeText(NLBroidMain.this.getApplicationContext(), "Listing results", Toast.LENGTH_SHORT);
-    		}
     		
     		pDialog.dismiss();
-    	}
+    		
+    		if(result != null) {
+    			Log.i("NLBroidMain", "No. of items created : " + result.size());
+    		
+    			NLBBeanParcelableArray parcelableArray = new NLBBeanParcelableArray(result);
+        		Intent resultsIntent = new Intent(NLBroidMain.this, NLBroidResults.class);    	 	
+        		resultsIntent.putExtra(ACTION_SHOW_RESULTS, parcelableArray);
+      
+        		NLBroidMain.this.startActivity(resultsIntent);  		
+    		}
     	
+    	}
+    
 
     	@Override
 		protected void onPreExecute() {

@@ -25,8 +25,7 @@
         android:id="@+id/search_choice"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:prompt="@string/search_choice"
-        
+        android:prompt="@string/search_choice"       
     />
     
     <TextView 
