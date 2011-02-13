@@ -31,6 +31,14 @@ public class NLBBeanParcelable implements Parcelable {
 		bean = (NLBBean) in.readValue(NLBBean.class.getClassLoader());
 	}
 	
+	public NLBBean getBean() {
+		return bean;
+	}
+
+	public void setBean(NLBBean bean) {
+		this.bean = bean;
+	}
+
 	@Override
 	public int describeContents() {
 		return 0;

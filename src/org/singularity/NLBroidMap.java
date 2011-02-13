@@ -19,10 +19,12 @@ package org.singularity;
 import java.util.List;
 
 import org.singularity.bean.NLBBean;
+import org.singularity.bean.NLBBeanParcelable;
 import org.singularity.map.NLBLibrariesOverlay;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -45,15 +47,22 @@ public class NLBroidMap extends MapActivity {
 		Drawable nlbIcon = this.getResources().getDrawable(R.drawable.nlb_icon);
 		NLBLibrariesOverlay overlayItems = new NLBLibrariesOverlay(nlbIcon);
 		
-		NLBBean bean = (NLBBean) getIntent().getParcelableExtra(NLBroidMain.ACTION_SHOW_MAP);
+		NLBBeanParcelable b =  (NLBBeanParcelable) getIntent().getParcelableExtra(NLBroidMain.ACTION_SHOW_MAP);
+		NLBBean bean = b.getBean();
 		int latitude = Double.valueOf(bean.getLatitude() * Math.pow(10,6)).intValue();
 		int longitude = Double.valueOf(bean.getLongitude() * Math.pow(10,6)).intValue();
 		
 		GeoPoint pt = new GeoPoint(latitude, longitude);
-		OverlayItem item = new OverlayItem(pt, bean.getTitle(), bean.getAddress());
+		OverlayItem item = new OverlayItem(pt, bean.getListTitle(), bean.getDetails());
 		overlayItems.addOverlay(item);
 		
 		mapOverlays.add(overlayItems);
+		
+		TextView text = (TextView) this.findViewById(R.id.dialog_text);
+		text.setText(bean.getDetails());
+		
+		view.getController().setZoom(21);
+		view.getController().setCenter(pt);
 	}
 	
 	@Override
