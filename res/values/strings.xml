@@ -23,4 +23,5 @@
     	<item>Title</item>
     	<item>Description</item>
     </string-array>
+    <string name="app_map">NLB Location</string>
 </resources>

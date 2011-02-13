@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Singularity.Sg
+ * Copyleft 2011 Singularity.Sg
 
 This file is part of NLBroid.
 
@@ -90,7 +90,7 @@ public class NLBXMLHandler extends DefaultHandler {
 					} catch (NumberFormatException nfe) {
 						nfe.printStackTrace();
 					}
-					currentEntry.setLongtitude(longitude);
+					currentEntry.setLongitude(longitude);
 				}
 			} else 
 			
@@ -157,7 +157,7 @@ public class NLBXMLHandler extends DefaultHandler {
 					} catch (NumberFormatException nfe) {
 						nfe.printStackTrace();
 					}
-					currentEntry.setLongtitude(longitude);
+					currentEntry.setLongitude(longitude);
 				}
 			}
 		}

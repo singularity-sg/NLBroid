@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Singularity.Sg
+ * Copyleft 2011 Singularity.Sg
 
 This file is part of NLBroid.
 
@@ -19,17 +19,17 @@ package org.singularity;
 import java.util.List;
 
 import org.singularity.bean.NLBBean;
+import org.singularity.bean.NLBBeanParcelable;
 import org.singularity.bean.NLBBeanParcelableArray;
 
-import android.app.Dialog;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class NLBroidResults extends ListActivity {
 	
@@ -52,7 +52,16 @@ public class NLBroidResults extends ListActivity {
 		      
 			  NLBBean b = (NLBBean) results.get(position);
 			 
-			  Dialog dialog = new Dialog(NLBroidResults.this);
+			  NLBBeanParcelable parcelableObj = new NLBBeanParcelable(b);
+      		  Intent detailsIntent = new Intent(NLBroidResults.this, NLBroidMap.class);    	 	
+      		  detailsIntent.putExtra(NLBroidMain.ACTION_SHOW_MAP, parcelableObj);
+			  
+      		  
+      		  NLBroidResults.this.startActivity(detailsIntent);
+      		  
+			  /** Deprecated : show the item address on selecting **/
+			  /*
+      		  Dialog dialog = new Dialog(NLBroidResults.this);
 
 			  dialog.setContentView(R.layout.result_details);
 			  
@@ -62,8 +71,10 @@ public class NLBroidResults extends ListActivity {
 			  dialog.setTitle(b.getListTitle());
 			  dialog.setCancelable(true);
 			  dialog.setCanceledOnTouchOutside(true);
-			  
+
 			  dialog.show();
+			  */
+      		  
 		    }
 		});
 		

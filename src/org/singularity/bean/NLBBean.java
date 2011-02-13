@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Singularity.Sg
+ * Copyleft 2011 Singularity.Sg
 
 This file is part of NLBroid.
 
@@ -30,7 +30,7 @@ public class NLBBean implements Serializable {
 	private String name;
 	private String address;
 	private Float latitude;
-	private Float longtitude;
+	private Float longitude;
 	
 	private String title;
 	private String description;
@@ -93,11 +93,11 @@ public class NLBBean implements Serializable {
 	public void setLatitude(Float latitude) {
 		this.latitude = latitude;
 	}
-	public Float getLongtitude() {
-		return longtitude;
+	public Float getLongitude() {
+		return longitude;
 	}
-	public void setLongtitude(Float longtitude) {
-		this.longtitude = longtitude;
+	public void setLongitude(Float longitude) {
+		this.longitude = longitude;
 	}
 	public String getTitle() {
 		return title;

@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Singularity.Sg
+ * Copyleft 2011 Singularity.Sg
 
 This file is part of NLBroid.
 

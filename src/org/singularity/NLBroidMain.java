@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Singularity.Sg
+ * Copyleft 2011 Singularity.Sg
 
 This file is part of NLBroid.
 
@@ -42,6 +42,7 @@ import android.widget.Toast;
 public class NLBroidMain extends Activity {
 	
 	public static final String ACTION_SHOW_RESULTS = "org.singularity.intent.ACTION_SHOW_RESULTS";
+	public static final String ACTION_SHOW_MAP = "org.singularity.intent.ACTION_SHOW_MAP";
 	
     /** Called when the activity is first created. */
     @Override
