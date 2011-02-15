@@ -21,6 +21,7 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 
 import com.google.android.maps.ItemizedOverlay;
@@ -32,7 +33,7 @@ public class NLBLibrariesOverlay extends ItemizedOverlay<OverlayItem> {
 	private Context ctx;
 
 	public NLBLibrariesOverlay(Drawable defaultMarker, Context ctx) {
-		super(defaultMarker);
+		super(boundCenterBottom(defaultMarker));
 		this.ctx = ctx;
 	}
 	
@@ -59,10 +60,19 @@ public class NLBLibrariesOverlay extends ItemizedOverlay<OverlayItem> {
 	@Override
 	protected boolean onTap(int i) {
 		OverlayItem item = items.get(i);
-		AlertDialog.Builder dialog = new AlertDialog.Builder(ctx);
-		dialog.setTitle(item.getTitle());
-		dialog.setMessage(item.getSnippet());
+		AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+		
+		AlertDialog dialog = builder.setTitle(item.getTitle()).setMessage(item.getSnippet()).setCancelable(true).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+			
+		}).create();
+		
 		dialog.show();
+		
 		return true;
 	}
 	

@@ -45,7 +45,7 @@ public class NLBroidMap extends MapActivity {
 		
 		List<Overlay> mapOverlays = view.getOverlays();
 		Drawable nlbIcon = this.getResources().getDrawable(R.drawable.nlb_icon);
-		NLBLibrariesOverlay overlayItems = new NLBLibrariesOverlay(nlbIcon);
+		NLBLibrariesOverlay overlayItems = new NLBLibrariesOverlay(nlbIcon, this);
 		
 		NLBBeanParcelable b =  (NLBBeanParcelable) getIntent().getParcelableExtra(NLBroidMain.ACTION_SHOW_MAP);
 		NLBBean bean = b.getBean();
